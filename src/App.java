@@ -49,10 +49,10 @@ public class App {
                 continue;
             }
 
-            WriteFile(String.join(" ", request), request[0], listOfFiles);
+            if (!WriteFile(String.join(" ", request), request[0], listOfFiles))
+                continue;
         }
     }
-
 
     public static Boolean CheckInputLength(String[] request) { // Проверка количества введенных данных
         try {
@@ -79,7 +79,7 @@ public class App {
         return true;
     }
 
-    public static boolean isDateValid(int year, int month, int day) {  // Проверка формата вводимой даты
+    public static boolean isDateValid(int year, int month, int day) { // Проверка формата вводимой даты
         try {
             if (LocalDate.now().isBefore(LocalDate.of(year, month, day)) || year < 1920) {
                 throw new DateTimeException("");
@@ -109,21 +109,24 @@ public class App {
         return true;
     }
 
-    public static void WriteFile(String str, String fam, Set<String> listOfFiles) { // Метод записи в файл
+    public static Boolean WriteFile(String str, String fam, Set<String> listOfFiles) { // Метод записи в файл
         try {
             if (listOfFiles.contains(fam)) {
                 BufferedWriter bw = new BufferedWriter(new FileWriter(fam + ".txt", true));
                 bw.append('\n');
                 bw.append(str);
                 bw.close();
+                return true;
             } else {
                 BufferedWriter bw = new BufferedWriter(new FileWriter(fam + ".txt", false));
                 bw.append(str);
                 listOfFiles.add(fam);
                 bw.close();
+                return true;
             }
         } catch (IOException e) {
             System.out.println(e.getMessage());
+            return false;
         }
     }
 
